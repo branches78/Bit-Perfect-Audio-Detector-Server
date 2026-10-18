@@ -1,6 +1,6 @@
-// Bit-Perfect Detector report server. It only receives the app's report and forwards it by email
-// (Resend); it stores nothing. The website is a separate static site (BitPerfectDetector-Web), and
-// reports are published by hand in BitPerfectDetector-Web/public/data/reports.json.
+// Bit-Perfect Detector report server. It only receives the app's anonymous report and forwards it by
+// email (Resend); it stores nothing. Reports are reviewed and published by hand in the website's
+// phone table.
 
 import express from "express";
 import { createHmac, randomBytes } from "node:crypto";

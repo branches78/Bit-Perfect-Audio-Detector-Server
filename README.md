@@ -90,6 +90,8 @@ npm start
 ```
 
 Without the Resend variables, emails are printed to the console (including the entry to publish).
+With `NODE_ENV=production` a missing variable is an error instead: the app is told the report wasn't
+delivered, so it's never lost silently.
 Tests: `npm test`.
 
 ## License

@@ -19,7 +19,8 @@ function escapeHtml(s) {
 
 /**
  * Sends the notification. Without RESEND_API_KEY (local development) it only prints it to the
- * console. Returns true if it was sent (or printed).
+ * console. Returns true if it was sent (or printed). In production a missing variable is an error:
+ * the app is told the report wasn't delivered instead of losing it silently.
  */
 export async function sendReportEmail(report, env = process.env) {
   const phone = phoneName(report.device.manufacturer, report.device.model);
@@ -62,6 +63,10 @@ export async function sendReportEmail(report, env = process.env) {
   const fileName = `reporte-${phone.replace(/[^A-Za-z0-9]+/g, "-").replace(/^-|-$/g, "")}-${report.id.slice(0, 8)}.txt`;
 
   if (!env.RESEND_API_KEY || !env.REPORT_TO_EMAIL) {
+    if (env.NODE_ENV === "production") {
+      console.error("[email] Faltan RESEND_API_KEY o REPORT_TO_EMAIL: el reporte no se puede enviar.");
+      return false;
+    }
     console.warn(`[email] Sin RESEND_API_KEY/REPORT_TO_EMAIL: no se envía correo.\n${text}`);
     return true;
   }
