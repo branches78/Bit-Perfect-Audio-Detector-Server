@@ -1,0 +1,24 @@
+{
+  "name": "bit-perfect-detector-server",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Bit-Perfect Detector report server: receives the app's anonymous reports and emails them to the maintainer (Resend). Stores nothing.",
+  "license": "GPL-3.0-or-later",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/branches78/Bit-Perfect-Detector-Server.git"
+  },
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test",
+    "start:local": "node --env-file=.env server.js"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "express": "4.22.3"
+  }
+}
