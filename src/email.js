@@ -42,7 +42,7 @@ export async function sendReportEmail(report, env = process.env) {
     "",
     ...lines.map(([k, v]) => `${k}: ${v}`),
     "",
-    "Para publicarlo, pega esto dentro del array de BitPerfectDetector-Web/public/data/reports.json (separado con una",
+    "Para publicarlo, pega esto dentro del array de BitPerfectAudioDetector-Web/public/data/reports.json (separado con una",
     "coma del reporte anterior), haz commit y push:",
     "",
     entry,
@@ -55,7 +55,7 @@ export async function sendReportEmail(report, env = process.env) {
     <table cellpadding="4">
       ${lines.map(([k, v]) => `<tr><td><b>${escapeHtml(k)}</b></td><td>${escapeHtml(v)}</td></tr>`).join("")}
     </table>
-    <p><b>Para publicarlo</b>, pega esto dentro del array de <code>BitPerfectDetector-Web/public/data/reports.json</code>
+    <p><b>Para publicarlo</b>, pega esto dentro del array de <code>BitPerfectAudioDetector-Web/public/data/reports.json</code>
       (separado con una coma del reporte anterior), haz commit y push:</p>
     <pre style="background:#f3f5f9;border:1px solid #e1e4ee;border-radius:6px;padding:10px">${escapeHtml(entry)}</pre>
     <p>Los detalles técnicos completos van en el archivo adjunto.</p>`;

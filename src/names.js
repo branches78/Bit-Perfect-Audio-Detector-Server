@@ -1,5 +1,5 @@
 // Name and format helpers shared with the website. They're copies of the functions of the same name
-// in BitPerfectDetector-Web/public/phones.js, so each folder works on its own; test/names.test.js
+// in BitPerfectAudioDetector-Web/public/phones.js, so each folder works on its own; test/names.test.js
 // checks that both copies give the same results.
 
 /** Bit-perfect support states, from worst to best. */

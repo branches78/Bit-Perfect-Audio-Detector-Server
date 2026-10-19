@@ -114,7 +114,7 @@ export function applyMarketingName(report, name) {
   return report;
 }
 
-/** What gets published from a report: the entry pasted into BitPerfectDetector-Web/public/data/reports.json. */
+/** What gets published from a report: the entry pasted into BitPerfectAudioDetector-Web/public/data/reports.json. */
 export function publishedEntry(report) {
   return {
     date: new Date(report.receivedAt).toISOString().slice(0, 10),
@@ -154,7 +154,7 @@ export function attachmentText(report) {
     `Reporte de Bit-Perfect Audio Detector ${report.id}`,
     `Recibido: ${new Date(report.receivedAt).toISOString()}`,
     "",
-    "=== Para publicar: pégalo dentro del array de BitPerfectDetector-Web/public/data/reports.json ===",
+    "=== Para publicar: pégalo dentro del array de BitPerfectAudioDetector-Web/public/data/reports.json ===",
     publishedEntryText(report),
     "",
     "=== Resumen ===",

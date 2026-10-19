@@ -4,7 +4,7 @@ import { existsSync } from "node:fs";
 import * as server from "../src/names.js";
 
 // The website's copy, when the whole repository is checked out (it isn't on Render).
-const webCopy = new URL("../../BitPerfectDetector-Web/public/phones.js", import.meta.url);
+const webCopy = new URL("../../BitPerfectAudioDetector-Web/public/phones.js", import.meta.url);
 
 test("the server's name helpers give the same results as the website's", { skip: !existsSync(webCopy) }, async () => {
   const web = await import(webCopy);
