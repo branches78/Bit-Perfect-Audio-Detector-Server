@@ -25,7 +25,9 @@ IP can't be recovered. That value is deleted after 48 hours, or sooner if the se
 ## What it does with a report
 
 1. Validates and cleans the report (`src/report.js`): unknown values are discarded, texts are
-   trimmed and single-line fields lose line breaks.
+   trimmed and single-line fields lose line breaks. Reports from Android emulators (`sdk_gphone…`,
+   `emu64…`, Genymotion…) are rejected with a 400, since Google Play's pre-launch report sends one
+   from its virtual devices on every upload and they say nothing about real phones.
 2. Cleans up the phone name: the brand gets a capital letter and isn't repeated when the model
    already includes it (`motorola` + `motorola edge 50 neo` → `Motorola edge 50 neo`). DAC names
    lose the `USB-Audio - ` prefix some phones add.

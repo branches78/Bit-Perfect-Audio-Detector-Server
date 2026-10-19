@@ -33,6 +33,18 @@ function normalizeApp(app) {
   return PACKAGE.test(pkg) ? { name, package: pkg } : { name };
 }
 
+/**
+ * Android emulators: Android Studio's and the virtual devices of Google Play's pre-launch report,
+ * whose robot taps "Send report" on every upload (Build.MODEL "sdk_gphone64_arm64", Build.DEVICE
+ * "emu64a"), plus Genymotion. Their reports say nothing about real phones.
+ */
+const EMULATOR_MODEL = /^(sdk_gphone|sdk_phone|google_sdk|sdk$|Android SDK built for|Emulator\b)/i;
+const EMULATOR_DEVICE = /^(emu64|emulator|generic(_|$)|vbox86|goldfish|ranchu)/i;
+
+export function isEmulator({ manufacturer = "", model = "", device = "" }) {
+  return EMULATOR_MODEL.test(model) || EMULATOR_DEVICE.test(device) || /^genymotion$/i.test(manufacturer);
+}
+
 /** Turns the received JSON into a clean report, or throws ReportError if it isn't valid. */
 export function normalizeReport(body, now = Date.now()) {
   if (!body || typeof body !== "object" || body.schema !== 1) {
@@ -47,6 +59,7 @@ export function normalizeReport(body, now = Date.now()) {
     sdk: int(d.sdk, 1, 100),
   };
   if (!device.manufacturer || !device.model) throw new ReportError("Faltan la marca o el modelo");
+  if (isEmulator(device)) throw new ReportError("Reports from emulators aren't accepted");
   device.buildModel = device.model; // Build.MODEL as is, to look up the commercial name
   Object.assign(device, cleanPhoneName(device.manufacturer, device.model));
 

@@ -29,6 +29,28 @@ test("rechaza un esquema desconocido o sin modelo", () => {
   assert.throws(() => normalizeReport(null), ReportError);
 });
 
+test("rechaza los reportes de emuladores (p. ej. el informe previo al lanzamiento de Google Play)", () => {
+  const emulators = [
+    { manufacturer: "Google", model: "sdk_gphone64_arm64", device: "emu64a" },
+    { manufacturer: "Google", model: "sdk_gphone64_x86_64", device: "emu64xa" },
+    { manufacturer: "unknown", model: "Android SDK built for x86", device: "generic_x86" },
+    { manufacturer: "Genymotion", model: "Pixel 3", device: "vbox86p" },
+  ];
+  for (const d of emulators) {
+    assert.throws(() => normalizeReport({ ...base, device: { ...d, android: "15", sdk: 35 } }), ReportError, d.model);
+  }
+  // Real phones whose names look a bit like those codes still pass.
+  const phones = [
+    { manufacturer: "Google", model: "Pixel 8", device: "shiba" },
+    { manufacturer: "Xiaomi", model: "25113PN0EI", device: "pudding" },
+    { manufacturer: "samsung", model: "SM-S921B", device: "e1s" },
+    { manufacturer: "motorola", model: "motorola edge 50 neo", device: "cancunf" },
+  ];
+  for (const d of phones) {
+    assert.doesNotThrow(() => normalizeReport({ ...base, device: { ...d, android: "15", sdk: 35 } }), d.model);
+  }
+});
+
 test("descarta valores fuera de rango y estados desconocidos", () => {
   const r = normalizeReport({ ...base, noDac: { maxRate: -5, maxBits: 999 }, bitPerfect: "hack" });
   assert.equal(r.noDac.maxRate, 0);
