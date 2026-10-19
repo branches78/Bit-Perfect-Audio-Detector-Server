@@ -1,4 +1,4 @@
-// Bit-Perfect Detector report server. It only receives the app's anonymous report and forwards it by
+// Bit-Perfect Audio Detector report server. It only receives the app's anonymous report and forwards it by
 // email (Resend); it stores nothing. Reports are reviewed and published by hand in the website's
 // phone table.
 
@@ -59,7 +59,7 @@ app.post("/api/reports", express.json({ limit: "64kb" }), async (req, res) => {
 });
 
 // Anyone opening this service in a browser is sent to the website.
-app.get("/", (_req, res) => (SITE_URL ? res.redirect(302, SITE_URL) : res.send("Bit-Perfect Detector report server")));
+app.get("/", (_req, res) => (SITE_URL ? res.redirect(302, SITE_URL) : res.send("Bit-Perfect Audio Detector report server")));
 
 // Broken or too-large JSON and any other error: a short JSON answer, never the error's details
 // (Express's default page shows the stack trace and the server's file paths).

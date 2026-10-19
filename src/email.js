@@ -80,7 +80,7 @@ export async function sendReportEmail(report, env = process.env) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      from: env.REPORT_FROM_EMAIL || "Bit-Perfect Detector <onboarding@resend.dev>",
+      from: env.REPORT_FROM_EMAIL || "Bit-Perfect Audio Detector <onboarding@resend.dev>",
       to: env.REPORT_TO_EMAIL.split(",").map((s) => s.trim()).filter(Boolean),
       subject: `Nuevo reporte: ${phone}`,
       text,

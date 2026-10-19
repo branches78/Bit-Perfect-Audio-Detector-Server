@@ -1,7 +1,7 @@
-# Bit-Perfect Detector — report server
+# Bit-Perfect Audio Detector — report server
 
 Small **Node.js (Express) server** that receives the anonymous reports sent from the
-[Bit-Perfect Detector app](https://github.com/branches78/Bit-Perfect-Detector) and forwards them to
+[Bit-Perfect Audio Detector app](https://github.com/branches78/Bit-Perfect-Detector) and forwards them to
 the maintainer by email (through [Resend](https://resend.com)). **It stores nothing**: no database,
 no files, no logs of the reports. After review, each phone is added by hand to the
 [public table of phones](https://bit-perfect-detector-web.onrender.com).
@@ -98,7 +98,7 @@ Tests: `npm test`.
 
 ## License
 
-Copyright (C) 2026 Bit-Perfect Detector
+Copyright (C) 2026 Bit-Perfect Audio Detector
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU
 General Public License as published by the Free Software Foundation, either version 3 of the License,

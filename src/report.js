@@ -151,7 +151,7 @@ export function publishedEntryText(report) {
 export function attachmentText(report) {
   const { summary, technical, ...data } = report;
   return [
-    `Reporte de Bit-Perfect Detector ${report.id}`,
+    `Reporte de Bit-Perfect Audio Detector ${report.id}`,
     `Recibido: ${new Date(report.receivedAt).toISOString()}`,
     "",
     "=== Para publicar: pégalo dentro del array de BitPerfectDetector-Web/public/data/reports.json ===",

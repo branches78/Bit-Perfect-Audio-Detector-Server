@@ -2,7 +2,7 @@
   "name": "bit-perfect-detector-server",
   "version": "1.0.0",
   "private": true,
-  "description": "Bit-Perfect Detector report server: receives the app's anonymous reports and emails them to the maintainer (Resend). Stores nothing.",
+  "description": "Bit-Perfect Audio Detector report server: receives the app's anonymous reports and emails them to the maintainer (Resend). Stores nothing.",
   "license": "GPL-3.0-or-later",
   "repository": {
     "type": "git",
