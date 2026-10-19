@@ -14,7 +14,7 @@ const base = {
   technical: "technical",
 };
 
-test("normaliza un reporte válido", () => {
+test("normalizes a valid report", () => {
   const r = normalizeReport(base, 1000);
   assert.equal(r.receivedAt, 1000);
   assert.equal(r.device.model, "Pixel 8");
@@ -23,13 +23,13 @@ test("normaliza un reporte válido", () => {
   assert.ok(r.id);
 });
 
-test("rechaza un esquema desconocido o sin modelo", () => {
+test("rejects an unknown schema or a report without a model", () => {
   assert.throws(() => normalizeReport({ ...base, schema: 2 }), ReportError);
   assert.throws(() => normalizeReport({ ...base, device: { manufacturer: "X" } }), ReportError);
   assert.throws(() => normalizeReport(null), ReportError);
 });
 
-test("rechaza los reportes de emuladores (p. ej. el informe previo al lanzamiento de Google Play)", () => {
+test("rejects reports from emulators (e.g. Google Play's pre-launch report)", () => {
   const emulators = [
     { manufacturer: "Google", model: "sdk_gphone64_arm64", device: "emu64a" },
     { manufacturer: "Google", model: "sdk_gphone64_x86_64", device: "emu64xa" },
@@ -51,14 +51,14 @@ test("rechaza los reportes de emuladores (p. ej. el informe previo al lanzamient
   }
 });
 
-test("descarta valores fuera de rango y estados desconocidos", () => {
+test("drops out-of-range values and unknown states", () => {
   const r = normalizeReport({ ...base, noDac: { maxRate: -5, maxBits: 999 }, bitPerfect: "hack" });
   assert.equal(r.noDac.maxRate, 0);
   assert.equal(r.noDac.maxBits, 0);
   assert.equal(r.bitPerfect, "unknown");
 });
 
-test("la entrada para publicar es JSON válido y solo trae lo que se publica", () => {
+test("the entry to publish is valid JSON and only has what gets published", () => {
   const r = normalizeReport({ ...base, dac: { name: "FiiO KA1", maxRate: 384000, maxBits: 32, bitPerfect: true } },
     Date.parse("2026-10-17T10:00:00Z"));
   const parsed = JSON.parse(publishedEntryText(r));
@@ -68,14 +68,14 @@ test("la entrada para publicar es JSON válido y solo trae lo que se publica", (
   assert.deepEqual(parsed.dac, { name: "FiiO KA1", maxRate: 384000, maxBits: 32, bitPerfect: true });
 });
 
-test("quita la marca repetida del modelo al recibir el reporte", () => {
+test("removes the repeated brand from the model when the report arrives", () => {
   const r = normalizeReport({ ...base, device: { manufacturer: "motorola", model: "motorola edge 50 neo" } });
   assert.equal(r.device.manufacturer, "Motorola");
   assert.equal(r.device.model, "edge 50 neo");
   assert.equal(r.device.buildModel, "motorola edge 50 neo");
 });
 
-test("quita el prefijo USB-Audio del nombre del DAC al recibir el reporte", () => {
+test("removes the USB-Audio prefix from the DAC name when the report arrives", () => {
   assert.equal(normalizeReport({ ...base, dac: { name: "USB-Audio - Cayin RU7" } }).dac.name, "Cayin RU7");
 });
 

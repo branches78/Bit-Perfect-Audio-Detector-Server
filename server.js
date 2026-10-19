@@ -69,4 +69,4 @@ app.use((err, _req, res, _next) => {
   res.status(status).json({ error: status === 500 ? "Internal error" : "Invalid request" });
 });
 
-app.listen(PORT, () => console.log(`Servidor de reportes en el puerto ${PORT}`));
+app.listen(PORT, () => console.log(`Report server listening on port ${PORT}`));

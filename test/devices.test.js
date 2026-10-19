@@ -17,23 +17,23 @@ const CSV = [
 
 const index = buildIndex(CSV);
 
-test("encuentra el nombre comercial de un código interno", () => {
+test("finds the commercial name of an internal model code", () => {
   assert.equal(lookupName(index, "25113PN0EI", "pudding"), "Xiaomi 17");
   assert.equal(lookupName(index, "25113pn0ei", "PUDDING"), "Xiaomi 17");
 });
 
-test("no cambia nada si hay varios nombres posibles, ninguno o ya es el mismo", () => {
+test("changes nothing when there are several possible names, none, or it's already the same", () => {
   assert.equal(lookupName(index, "motorola edge 50 neo", "vienna"), null); // Motorola reuses the code
-  assert.equal(lookupName(index, "XYZ-123", "nada"), null);
+  assert.equal(lookupName(index, "XYZ-123", "none"), null);
   assert.equal(lookupName(index, "Pixel 8", "shiba"), null);
-  assert.equal(lookupName(index, "25113PN0EI", "otro"), null); // the device has to match too
+  assert.equal(lookupName(index, "25113PN0EI", "other"), null); // the device has to match too
 });
 
-test("lee campos con comas y comillas", () => {
+test("reads fields with commas and quotes", () => {
   assert.equal(lookupName(index, "AC-1", "acme"), 'Phone "Pro", 2026');
 });
 
-test("el reporte publicado lleva el nombre comercial y el correo, el código", () => {
+test("the published report has the commercial name, and the email the code", () => {
   const r = normalizeReport({
     schema: 1,
     device: { manufacturer: "Xiaomi", model: "25113PN0EI", device: "pudding", android: "16", sdk: 36 },

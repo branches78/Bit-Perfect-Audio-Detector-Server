@@ -64,10 +64,10 @@ export async function sendReportEmail(report, env = process.env) {
 
   if (!env.RESEND_API_KEY || !env.REPORT_TO_EMAIL) {
     if (env.NODE_ENV === "production") {
-      console.error("[email] Faltan RESEND_API_KEY o REPORT_TO_EMAIL: el reporte no se puede enviar.");
+      console.error("[email] RESEND_API_KEY or REPORT_TO_EMAIL is missing: the report can't be sent.");
       return false;
     }
-    console.warn(`[email] Sin RESEND_API_KEY/REPORT_TO_EMAIL: no se envía correo.\n${text}`);
+    console.warn(`[email] No RESEND_API_KEY/REPORT_TO_EMAIL: no email is sent.\n${text}`);
     return true;
   }
 
@@ -91,7 +91,7 @@ export async function sendReportEmail(report, env = process.env) {
     }),
   });
   if (!res.ok) {
-    console.error(`[email] Resend respondió ${res.status}: ${await res.text()}`);
+    console.error(`[email] Resend answered ${res.status}: ${await res.text()}`);
     return false;
   }
   return true;

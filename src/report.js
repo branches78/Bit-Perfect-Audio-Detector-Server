@@ -48,7 +48,7 @@ export function isEmulator({ manufacturer = "", model = "", device = "" }) {
 /** Turns the received JSON into a clean report, or throws ReportError if it isn't valid. */
 export function normalizeReport(body, now = Date.now()) {
   if (!body || typeof body !== "object" || body.schema !== 1) {
-    throw new ReportError("Formato de reporte no reconocido");
+    throw new ReportError("Unrecognized report format");
   }
   const d = body.device ?? {};
   const device = {
@@ -58,7 +58,7 @@ export function normalizeReport(body, now = Date.now()) {
     android: str(d.android, 20),
     sdk: int(d.sdk, 1, 100),
   };
-  if (!device.manufacturer || !device.model) throw new ReportError("Faltan la marca o el modelo");
+  if (!device.manufacturer || !device.model) throw new ReportError("The manufacturer or the model is missing");
   if (isEmulator(device)) throw new ReportError("Reports from emulators aren't accepted");
   device.buildModel = device.model; // Build.MODEL as is, to look up the commercial name
   Object.assign(device, cleanPhoneName(device.manufacturer, device.model));

@@ -72,10 +72,10 @@ async function loadIndex() {
       const text = new TextDecoder(utf16 ? (bytes[0] === 0xff ? "utf-16le" : "utf-16be") : "utf-8").decode(bytes);
       index = buildIndex(text);
       loadedAt = Date.now();
-      console.log(`[devices] Lista de Google Play cargada: ${index.size} modelos`);
+      console.log(`[devices] Google Play device list loaded: ${index.size} models`);
     } catch (e) {
       failedAt = Date.now();
-      console.error("[devices] No se pudo descargar la lista de dispositivos:", e.message);
+      console.error("[devices] Could not download the device list:", e.message);
     } finally {
       loading = null;
     }
