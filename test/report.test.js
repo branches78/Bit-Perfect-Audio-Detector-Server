@@ -68,6 +68,21 @@ test("the entry to publish is valid JSON and only has what gets published", () =
   assert.deepEqual(parsed.dac, { name: "FiiO KA1", maxRate: 384000, maxBits: 32, bitPerfect: true });
 });
 
+test("publishes the firmware and the DAC's USB Audio Class when the app sends them", () => {
+  const r = normalizeReport({
+    ...base,
+    device: { ...base.device, firmware: "BP2A.250605.031 (A175FXXU1AYG1)" },
+    dac: { name: "HiBy FC3", uac: "UAC2", maxRate: 192000, maxBits: 32, bitPerfect: false },
+  });
+  const entry = publishedEntry(r);
+  assert.deepEqual(Object.keys(entry),
+    ["date", "manufacturer", "model", "android", "firmware", "bitPerfect", "noDac", "dac", "apps"]);
+  assert.equal(entry.firmware, "BP2A.250605.031 (A175FXXU1AYG1)");
+  assert.deepEqual(entry.dac, { name: "HiBy FC3", uac: "UAC2", maxRate: 192000, maxBits: 32, bitPerfect: false });
+  // Anything else in uac is dropped.
+  assert.equal(normalizeReport({ ...base, dac: { name: "X", uac: "<b>UAC9</b>" } }).dac.uac, null);
+});
+
 test("removes the repeated brand from the model when the report arrives", () => {
   const r = normalizeReport({ ...base, device: { manufacturer: "motorola", model: "motorola edge 50 neo" } });
   assert.equal(r.device.manufacturer, "Motorola");

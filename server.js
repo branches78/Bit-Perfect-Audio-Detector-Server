@@ -32,7 +32,7 @@ app.post("/api/reports", express.json({ limit: "64kb" }), async (req, res) => {
     const report = normalizeReport(req.body);
     const ipKey = createHmac("sha256", IP_KEY).update(ipGroup(req.ip)).digest("hex").slice(0, 16);
     const allowed = limiter.take(ipKey);
-    if (allowed === "ip") return res.status(429).json({ error: "Only one report every 48 hours" });
+    if (allowed === "ip") return res.status(429).json({ error: "Only one report every 24 hours" });
     if (allowed === "daily") {
       // The header tells the app it's this limit and not Render's own 503 (service down).
       res.set("X-Report-Limit", "daily");

@@ -27,11 +27,12 @@ export async function sendReportEmail(report, env = process.env) {
   const lines = [
     ["Teléfono", report.device.modelCode ? `${phone} (código ${report.device.modelCode})` : phone],
     ["Android", `${report.device.android} (API ${report.device.sdk})`],
+    ["Firmware", report.device.firmware || "No enviado (versión anterior de la app)"],
     ["Bit-perfect", BIT_PERFECT_LABEL[report.bitPerfect]],
     ["Sin DAC (declarado)", formatResolution(report.noDac.maxRate, report.noDac.maxBits)
       + (report.noDac.dynamic ? " · salida USB dinámica" : "")],
     ["Con DAC (máximo)", report.dac
-      ? `${formatResolution(report.dac.maxRate, report.dac.maxBits)} · ${report.dac.name || "DAC sin nombre"}`
+      ? `${formatResolution(report.dac.maxRate, report.dac.maxBits)} · ${report.dac.name || "DAC sin nombre"}${report.dac.uac ? ` (${report.dac.uac})` : ""}`
       : "Sin DAC conectado"],
     ["Apps compatibles", report.compatibleApps.map((a) => a.name).join(", ") || "Ninguna detectada"],
   ];

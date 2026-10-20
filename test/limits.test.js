@@ -11,7 +11,7 @@ test("IPv4 as is; IPv6 grouped by its /64 block", () => {
   assert.equal(ipGroup("fe80::1%eth0"), "fe80:0:0:0::/64");
 });
 
-test("one report per sender every 48 hours", () => {
+test("one report per sender every 24 hours", () => {
   const limiter = createLimiter({ limitMs: 1000 });
   assert.equal(limiter.take("a", 0), "ok");
   assert.equal(limiter.take("a", 500), "ip");

@@ -45,6 +45,8 @@ export function isEmulator({ manufacturer = "", model = "", device = "" }) {
   return EMULATOR_MODEL.test(model) || EMULATOR_DEVICE.test(device) || /^genymotion$/i.test(manufacturer);
 }
 
+const UAC_VERSIONS = ["UAC1", "UAC2", "UAC3"];
+
 /** Turns the received JSON into a clean report, or throws ReportError if it isn't valid. */
 export function normalizeReport(body, now = Date.now()) {
   if (!body || typeof body !== "object" || body.schema !== 1) {
@@ -57,6 +59,8 @@ export function normalizeReport(body, now = Date.now()) {
     device: str(d.device, 80),
     android: str(d.android, 20),
     sdk: int(d.sdk, 1, 100),
+    // Firmware version (build number), from app 1.0.5 on; it can differ by region.
+    firmware: str(d.firmware, 120),
   };
   if (!device.manufacturer || !device.model) throw new ReportError("The manufacturer or the model is missing");
   if (isEmulator(device)) throw new ReportError("Reports from emulators aren't accepted");
@@ -80,6 +84,8 @@ export function normalizeReport(body, now = Date.now()) {
       bitPerfect: body.dac.bitPerfect === true,
       bitPerfectMaxRate: int(body.dac.bitPerfectMaxRate, 0, 1_536_000),
       bitPerfectMaxBits: int(body.dac.bitPerfectMaxBits, 0, 64),
+      // USB Audio Class version, from app 1.0.5 on; null if unknown.
+      uac: UAC_VERSIONS.includes(body.dac.uac) ? body.dac.uac : null,
     };
   }
 
@@ -121,10 +127,18 @@ export function publishedEntry(report) {
     manufacturer: report.device.manufacturer,
     model: report.device.model,
     android: report.device.android,
+    // Firmware and UAC only when the app sends them (older versions don't); the website shows N/A.
+    ...(report.device.firmware ? { firmware: report.device.firmware } : {}),
     bitPerfect: report.bitPerfect,
     noDac: { maxRate: report.noDac.maxRate, maxBits: report.noDac.maxBits, dynamic: report.noDac.dynamic },
     dac: report.dac
-      ? { name: report.dac.name, maxRate: report.dac.maxRate, maxBits: report.dac.maxBits, bitPerfect: report.dac.bitPerfect }
+      ? {
+        name: report.dac.name,
+        ...(report.dac.uac ? { uac: report.dac.uac } : {}),
+        maxRate: report.dac.maxRate,
+        maxBits: report.dac.maxBits,
+        bitPerfect: report.dac.bitPerfect,
+      }
       : null,
     apps: report.compatibleApps,
   };
