@@ -19,7 +19,7 @@ music apps installed on the phone, and the technical details of the analysis.
 **Reports are anonymous.** They don't include names, email addresses, accounts, contacts, location,
 advertising IDs or any other data that identifies the person who sends them.
 
-The server needs the sender's IP address for one thing: allowing one report every 24 hours. It never
+The server needs the sender's IP address for one thing: allowing at most two reports every 24 hours. It never
 stores it: it keeps only an HMAC of it in memory, with a random key created on every start, so the
 IP can't be recovered. That value is deleted after 24 hours, or sooner if the server restarts.
 
@@ -48,7 +48,7 @@ give the same results.
 
 | Route | Purpose |
 |---|---|
-| `POST /api/reports` | Receives a report from the app and emails it. Max. 64 KB; one report per IP every 24 hours (429) and at most 50 reports a day in total (503 with the `X-Report-Limit: daily` header, which the app shows as its own message) |
+| `POST /api/reports` | Receives a report from the app and emails it. Max. 64 KB; two reports per IP every 24 hours (429) and at most 50 reports a day in total (503 with the `X-Report-Limit: daily` header, which the app shows as its own message) |
 | `GET /healthz` | Health check |
 | `GET /` | Redirects to the website (`SITE_URL`) |
 

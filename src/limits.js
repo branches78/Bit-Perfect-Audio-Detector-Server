@@ -1,8 +1,9 @@
-// Limits on received reports: one per IP every 24 hours (the app enforces the same limit on its
+// Limits on received reports: two per IP every 24 hours (the app enforces the same limit on its
 // own) and a daily cap for everyone together, so spam can't use up Resend's daily email quota.
 // Kept in memory: on Render's free plan it's cleared when the service goes to sleep.
 
 export const LIMIT_MS = 24 * 3600_000;
+export const REPORTS_PER_IP = 2;
 export const DAILY_CAP = 50;
 
 /**
@@ -19,33 +20,40 @@ export function ipGroup(ip = "") {
   return `${groups.slice(0, 4).map((g) => (parseInt(g, 16) || 0).toString(16)).join(":")}::/64`;
 }
 
-export function createLimiter({ limitMs = LIMIT_MS, dailyCap = DAILY_CAP } = {}) {
-  const lastByKey = new Map();
+export function createLimiter({ limitMs = LIMIT_MS, perKey = REPORTS_PER_IP, dailyCap = DAILY_CAP } = {}) {
+  const timesByKey = new Map(); // key → times of its reports in the last limitMs
   let day = "";
   let today = 0;
   const dayOf = (now) => new Date(now).toISOString().slice(0, 10);
 
   return {
     /**
-     * "ok" (and reserves the slot), "ip" if that sender already sent one in the last 24 hours, or
-     * "daily" if today's cap has been reached.
+     * "ok" (and reserves the slot), "ip" if that sender already sent [perKey] in the last 24 hours,
+     * or "daily" if today's cap has been reached.
      */
     take(key, now = Date.now()) {
-      for (const [k, t] of lastByKey) if (now - t >= limitMs) lastByKey.delete(k);
+      for (const [k, times] of timesByKey) {
+        const recent = times.filter((t) => now - t < limitMs);
+        if (recent.length) timesByKey.set(k, recent);
+        else timesByKey.delete(k);
+      }
       if (dayOf(now) !== day) {
         day = dayOf(now);
         today = 0;
       }
-      if (lastByKey.has(key)) return "ip";
+      const times = timesByKey.get(key) ?? [];
+      if (times.length >= perKey) return "ip";
       if (today >= dailyCap) return "daily";
-      lastByKey.set(key, now);
+      timesByKey.set(key, [...times, now]);
       today += 1;
       return "ok";
     },
 
     /** Gives the slot back when the report couldn't be delivered, so the sender can try again. */
     release(key, now = Date.now()) {
-      lastByKey.delete(key);
+      const times = (timesByKey.get(key) ?? []).slice(0, -1);
+      if (times.length) timesByKey.set(key, times);
+      else timesByKey.delete(key);
       if (dayOf(now) === day && today > 0) today -= 1;
     },
   };
