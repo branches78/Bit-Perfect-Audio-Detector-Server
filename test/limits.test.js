@@ -11,13 +11,13 @@ test("IPv4 as is; IPv6 grouped by its /64 block", () => {
   assert.equal(ipGroup("fe80::1%eth0"), "fe80:0:0:0::/64");
 });
 
-test("two reports per sender every 24 hours", () => {
+test("two reports per sender every 48 hours", () => {
   const limiter = createLimiter({ limitMs: 1000 });
   assert.equal(limiter.take("a", 0), "ok");
   assert.equal(limiter.take("a", 400), "ok");
   assert.equal(limiter.take("a", 500), "ip");
   assert.equal(limiter.take("b", 500), "ok");
-  assert.equal(limiter.take("a", 1000), "ok"); // the first one is over 24 hours old
+  assert.equal(limiter.take("a", 1000), "ok"); // the first one is over 48 hours old
   assert.equal(limiter.take("a", 1100), "ip");
 });
 

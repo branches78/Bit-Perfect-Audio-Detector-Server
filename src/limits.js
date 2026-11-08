@@ -1,8 +1,8 @@
-// Limits on received reports: two per IP every 24 hours (the app enforces the same limit on its
+// Limits on received reports: two per IP every 48 hours (the app enforces the same limit on its
 // own) and a daily cap for everyone together, so spam can't use up Resend's daily email quota.
 // Kept in memory: on Render's free plan it's cleared when the service goes to sleep.
 
-export const LIMIT_MS = 24 * 3600_000;
+export const LIMIT_MS = 48 * 3600_000;
 export const REPORTS_PER_IP = 2;
 export const DAILY_CAP = 50;
 
@@ -28,7 +28,7 @@ export function createLimiter({ limitMs = LIMIT_MS, perKey = REPORTS_PER_IP, dai
 
   return {
     /**
-     * "ok" (and reserves the slot), "ip" if that sender already sent [perKey] in the last 24 hours,
+     * "ok" (and reserves the slot), "ip" if that sender already sent [perKey] in the last 48 hours,
      * or "daily" if today's cap has been reached.
      */
     take(key, now = Date.now()) {
